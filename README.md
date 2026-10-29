@@ -240,8 +240,3 @@ My three wrong predictions each taught the same thing: Azure's default behavior 
 
 The result I would have missed without checking is the second address. I had been thinking of the account as having one door. It has two, and they follow different rules. The account-level setting `allowBlobPublicAccess = False` did not stop the website, and the documentation says it should not. Anyone who treats that setting as "nothing in this account is public" is wrong for `$web`.
 
-What I did not do, and would do next: add a real `404.html` and test the error page, and rebuild the same site with Terraform so the whole lab is repeatable from code.
-
-## Credit
-
-Based on Lab 01, "Hosting Your First Static Website in Azure", from Jhante Charles's course. The steps were rebuilt and written up by me.
