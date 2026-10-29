@@ -2,8 +2,6 @@
 
 A one-page website served straight from an Azure storage account, with no web server to build or patch. I built it in the Azure portal, checked it from the browser and from PowerShell, looked at what the storage account refuses to show anonymously, and then deleted everything and confirmed it was gone.
 
-This lab is based on Lab 01 from Jhante Charles's course. I rebuilt it myself and wrote it up in my own words. I changed the region from the one in the course document (East US) to Central US. Everything here was built in the portal. I did not rebuild it with Terraform.
-
 You do not need any Azure experience to follow this. Each step says what it does, what to do, and what you should see when it works.
 
 ## What this lab is for
