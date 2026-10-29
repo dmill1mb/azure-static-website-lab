@@ -26,25 +26,25 @@ A static website is a set of files that never change when someone visits: HTML, 
 | Blob endpoint | A second address of the same storage account, `https://<account>.blob.core.windows.net/`, used to reach blobs directly. |
 | Index document | The file the site shows when someone opens the bare address. Here, `index.html`. |
 | Error document | The file the site shows for a missing page. Here, `404.html`. |
-| DNS (Domain Name System) | The lookup that turns a name such as `stlab01demarcus.z19.web.core.windows.net` into an address a computer can connect to. |
+| DNS (Domain Name System) | The lookup that turns a name such as `stlab01[your name].z19.web.core.windows.net` into an address a computer can connect to. |
 
 ## Architecture
 
 ```
                        static website endpoint
-  Browser  ----------> https://stlab01demarcus.z19.web.core.windows.net/
+  Browser  ----------> https://stlab01[your name].z19.web.core.windows.net/
                                     |
                                     v
-        Resource group: rg-lab01-Demarcus (Central US)
+        Resource group: rg-lab01-[your name}   (Central US)
         +-------------------------------------------------+
-        |  Storage account: stlab01demarcus               |
+        |  Storage account: stlab01[your name}              |
         |  StorageV2, Standard_LRS                        |
         |                                                 |
         |    $web container                               |
         |      index.html                                 |
         +-------------------------------------------------+
                                     ^
-  Browser  ----------> https://stlab01demarcus.blob.core.windows.net/$web/index.html
+  Browser  ----------> https://stlab01[your name].blob.core.windows.net/$web/index.html
                        blob endpoint: refused (PublicAccessNotPermitted)
 ```
 
@@ -75,7 +75,7 @@ az login
 
 **What to do.** In the portal, open **Resource groups**, click **Create**, and use:
 
-- Resource group name: `rg-lab01-Demarcus`
+- Resource group name: `rg-lab01-[your name}  `
 - Region: Central US
 
 Click **Review + create**, then **Create**. The region of a resource group is where Azure keeps the group's own information. The resources inside it can sit in other regions, so this choice does not force the storage account's region.
@@ -83,10 +83,10 @@ Click **Review + create**, then **Create**. The region of a resource group is wh
 **What you should see.** Check it from the terminal:
 
 ```powershell
-az group show -n rg-lab01-demarcus -o table
+az group show -n rg-lab01-[your name}   -o table
 ```
 
-It prints the location `centralus` and the name `rg-lab01-Demarcus`. I typed the name in lowercase and Azure still found the group. It kept the capital D I used when I created it.
+It prints the location `centralus` and the name `rg-lab01-[your name}`. I typed the name in lowercase and Azure still found the group. It kept the capital D I used when I created it.
 
 ## Step 2: Create the storage account
 
@@ -96,8 +96,8 @@ It prints the location `centralus` and the name `rg-lab01-Demarcus`. I typed the
 
 **What to do.** In the portal, open **Storage accounts**, click **Create**, and use:
 
-- Resource group: `rg-lab01-Demarcus`
-- Storage account name: `stlab01demarcus`
+- Resource group: `rg-lab01-[your name}  `
+- Storage account name: `stlab01[your name}  `
 - Region: Central US
 
 The name must be globally unique, because it is part of the website's public DNS name. Pick your own name. Click **Review + create**, then **Create**.
@@ -105,10 +105,10 @@ The name must be globally unique, because it is part of the website's public DNS
 **What you should see.** Check the real settings from Azure and not from the form:
 
 ```powershell
-az storage account list -g rg-lab01-demarcus --query "[].[name,location,kind,sku.name,allowBlobPublicAccess]" -o tsv
+az storage account list -g rg-lab01-[your name}   --query "[].[name,location,kind,sku.name,allowBlobPublicAccess]" -o tsv
 ```
 
-It printed `stlab01demarcus centralus StorageV2 Standard_LRS False`. That is the account name, region, kind, redundancy type and whether anonymous blob access is allowed at the account level. It was `False`.
+It printed `stlab01[your name}  centralus StorageV2 Standard_LRS False`. That is the account name, region, kind, redundancy type and whether anonymous blob access is allowed at the account level. It was `False`.
 
 ## Step 3: Look before you turn the feature on
 
@@ -183,7 +183,8 @@ In the portal, open the `$web` container and upload `index.html`.
 **What to do.** Open the Primary endpoint in a browser. Then run this, with your own account name:
 
 ```powershell
-(Invoke-WebRequest -Uri https://stlab01demarcus.z19.web.core.windows.net/ -UseBasicParsing).StatusCode
+(Invoke-WebRequest -Uri https://stlab01[your name].z19.web.core.windows.net/ -UseBasicParsing).StatusCode
+
 ```
 
 **What you should see.** The browser shows "Hello from the Cloud!" and the command prints `200`. `200` is the code for "the request worked". A page drawn in a browser tells you less than a status code from Azure does.
@@ -195,7 +196,7 @@ In the portal, open the `$web` container and upload `index.html`.
 **What to do.** Open this address in a browser:
 
 ```
-https://stlab01demarcus.blob.core.windows.net/$web/index.html
+https://stlab01[your name].blob.core.windows.net/$web/index.html
 ```
 
 **What you should see.** An XML error with the code `PublicAccessNotPermitted`. The file is there, and the website address serves it, but the blob address refuses anonymous visitors.
@@ -210,17 +211,17 @@ Chrome also showed a "Dangerous site" warning on this blob address. I do not kno
 
 **Before you run it.** After the group is gone, what will the website address do?
 
-**What to do.** In the portal, open **Resource groups**, open `rg-lab01-Demarcus`, click **Delete resource group**, type the name to confirm, and click **Delete**. Wait for the notification. Then check from the terminal:
+**What to do.** In the portal, open **Resource groups**, open `rg-lab01-[your name]`, click **Delete resource group**, type the name to confirm, and click **Delete**. Wait for the notification. Then check from the terminal:
 
 ```powershell
 az login
-az group exists -n rg-lab01-demarcus
+az group exists -n rg-lab01-[your name]
 ```
 
 Then run the website check again:
 
 ```powershell
-(Invoke-WebRequest -Uri https://stlab01demarcus.z19.web.core.windows.net/ -UseBasicParsing).StatusCode
+(Invoke-WebRequest -Uri https://stlab01[your name].z19.web.core.windows.net/ -UseBasicParsing).StatusCode
 ```
 
 **What you should see.** `az group exists` printed `false`. The website check did not print a number. It printed an error: "The remote name could not be resolved". No server answered at all. That is different from the 404 page in Step 5, where the storage account existed and said the file was missing.
